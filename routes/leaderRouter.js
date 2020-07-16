@@ -1,0 +1,45 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const leaderRouter = express.Router({mergeParams: true});
+leaderRouter.use(bodyParser.json());
+
+leaderRouter.route('/')
+.get((req,res,next) =>{
+	if(req.params.leaderId) res.end('Will send details of the leader: ' + req.params.leaderId + ' to you!');
+	else res.end('Will send all the leaders to you!');	
+})
+
+.post((req,res,next) =>{
+	if(req.params.leaderId)
+	{
+		res.statusCode = 403;
+		res.end('POST operation not supported on /leaders/ ' + req.params.leaderId );
+	}
+	else res.end('Will add the leader: ' + req.body.name + ' with details: ' + req.body.description);
+
+})
+
+
+.put((req,res,next) =>{
+	if(req.params.leaderId)
+	{
+		res.write('Updating the leader: ' + req.params.leaderId + '\n');
+	 	res.end('Will update the leader: ' + req.body.name + ' with details: ' + req.body.description);
+	}
+	else
+	{
+		res.statusCode = 403;
+		res.end('PUT operation not supported on /leaders');	
+	}
+})
+
+
+.delete((req,res,next) =>{
+	if(req.params.leaderId)
+	{
+		res.end('Deleting leader: ' + req.params.leaderId);
+	}
+	else res.end('Deleting all the leaders');
+});
+
+module.exports = leaderRouter;
