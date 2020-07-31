@@ -6,8 +6,16 @@ router.use(bodyParser.json());
 var passport = require('passport');
 var authenticate = require('../authenticate');
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.route('/')
+.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+  //res.send('respond with a resource');
+  User.find({})
+  .then((users)=>{
+  	res.statusCode = 200;
+  	res.setHeader('Content-Type', 'application/json');
+  	res.json(users);
+  }, (err)=> next(err))
+  .catch((err)=>next(err));
 });
 
 router.post('/signup', (req,res,next) =>{
